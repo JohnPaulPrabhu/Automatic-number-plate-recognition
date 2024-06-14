@@ -23,28 +23,28 @@ def main():
         results[frame_number] = {}
         ret, frame = cap.read()
         # # detect vehivlcle
-        # # if total >= 100:
-        # #     break
+        # if frame_numbeq
         if ret:
             detections = coco_model(frame)[0]
             detections_ = []
             for detection in detections.boxes.data.tolist():
+                print(detection)
                 x1, y1, x2, y2, confidence_score, class_id = detection
                 if int(class_id) in detect:
                     detections_.append([x1, y1, x2, y2, confidence_score])
             
             # track vehicle
             track_ids = motion_tracker.update(np.asarray(detections_))
-    
+            
             # detect license plate
             license_plates = license_plate_detector(frame)
             for license_plate in license_plates[0].obb:
-                x1, y1, x2, y2 = license_plate.xyxy[0]
+                x1, y1, x2, y2 = map(float,license_plate.xyxy[0])
                 conf_score = license_plate.conf.item()
                 cls_id = license_plate.cls.item()
 
                 # Assign license plate to car
-                xcar1, ycar1, xcar2, ycar2, car_id = get_car(license_plate, track_ids)
+                xcar1, ycar1, xcar2, ycar2, car_id = get_car((x1, y1, x2, y2), track_ids)
 
                 # crop license plate
                 license_plate_crop = frame[int(y1):int(y2), int(x1):int(x2), :]
@@ -69,8 +69,11 @@ def main():
                                                     'license_plate_text_conf_score': license_plate_text_conf_score
                                                 }
                                             }
+                    print(results)
+                    break
+                break
         
-                        
+            break
             # Visualize it
             for i in license_plates[0].obb:
                 x1, y1, x2, y2 = map(int, i.xyxy[0])
