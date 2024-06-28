@@ -6,3 +6,5 @@ scipy
 pandas
 easyocr
 matplotlib
+pillow
+filterpy
