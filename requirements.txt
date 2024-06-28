@@ -1,0 +1,8 @@
+ultralytics
+supervision
+opencv-python
+numpy
+scipy
+pandas
+easyocr
+matplotlib
