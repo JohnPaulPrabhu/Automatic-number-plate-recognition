@@ -1,7 +1,7 @@
 ---
 # Automatic Number Plate Recognition
 
-This project implements an Automatic Number Plate Recognition (ANPR) system using computer vision and machine learning techniques. The goal is to detect and recognize vehicle number plates from images or video streams.
+This project uses computer vision and deep learning techniques to implement an Automatic Number Plate Recognition (ANPR) system. The goal is to detect and recognize vehicle number plates from images or video streams.
 
 
 https://github.com/JohnPaulPrabhu/Automatic-number-plate-recognition/assets/26264448/a3f555f2-701f-4123-bb96-616d46eb4053
