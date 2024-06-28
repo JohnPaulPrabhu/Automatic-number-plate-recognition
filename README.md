@@ -56,7 +56,7 @@ https://github.com/JohnPaulPrabhu/Automatic-number-plate-recognition/assets/2626
 
 - `main.py`: Main script to run the ANPR system.
 - `util.py`: Utility functions for detection, recognition, and tracking.
-- `add_missing_values.py`: Script to interpolate and fill missing values in the output data.
+- `visualize.py`: Script to visualize the final output.
 - `requirements.txt`: List of required packages.
 
 ## Contributing
