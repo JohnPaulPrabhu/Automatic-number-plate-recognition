@@ -22,19 +22,6 @@ def write_csv(results: dict, output_path: str) -> None:
                 license_plate = data['license_plate']
                 writer.writerow([frame_number, car_id, car_bbox, license_plate['bbox'], license_plate['license_plate_conf_score'], license_plate['license_text'], license_plate['license_plate_text_conf_score']])
 
-def write_csv(results: dict, output_path: str) -> None:
-    with open(output_path, 'w', newline='') as csvfile:
-        writer = csv.writer(csvfile)
-        writer.writerow(['frame_number', 'car_id', 'car_bbox', 'license_plate_bbox','license_plate_conf_score', 'license_text', 'license_plate_text_conf_score'])
-        
-        # iterate over the dictionary and write each row
-        for frame_number, car_id_dict in results.items():
-            for car_id, data in car_id_dict.items():
-                car_bbox = data['car']['bbox']
-                license_plate = data['license_plate']
-                writer.writerow([frame_number, car_id, car_bbox, license_plate['bbox'], license_plate['license_plate_conf_score'], license_plate['license_text'], license_plate['license_plate_text_conf_score']])
-
-
 def get_car(license_plate: tuple, track_ids: List[np.ndarray]) -> List[float]:
     x1, y1, x2, y2 = license_plate
     for track_id in track_ids:
@@ -45,19 +32,13 @@ def get_car(license_plate: tuple, track_ids: List[np.ndarray]) -> List[float]:
     return -1, -1, -1, -1, -1
 
 def read_license_plate(license_plate_cropped_img: Image) -> Tuple[str, float]:
-    print("Checking read license plate")
-    # detections = reader.readtext(license_plate_cropped_img, decoder=easyocr.GreedyDecoder(max_length=7))
-    detections = reader.readtext(license_plate_cropped_img, allowlist=('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'), text_threshold=0.8,width_ths=1.5)
-    print("detections", detections)
+    detections = reader.readtext(license_plate_cropped_img, allowlist=('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'), text_threshold=0.8, width_ths=1.5)
     text = ''
     score = 0
     for detection in detections:
-        # print("detection", detection)
         bbox, text, score = detection
         text = text.upper().replace(' ', '')
-        # print("text", text)
         if check_license_format(text):
-            # print("checking if statement")
             return (check_format(text), score)
     return (text, score)
 

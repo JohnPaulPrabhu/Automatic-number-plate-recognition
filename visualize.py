@@ -3,23 +3,6 @@ import cv2
 import numpy as np
 import pandas as pd
 
-def draw_border(img, top_left, bottom_right, color=(0, 255, 0), thickness=10, line_length_x=200, line_length_y=200):
-    x1, y1 = top_left
-    x2, y2 = bottom_right
-
-    cv2.line(img, (x1, y1), (x1, y1 + line_length_y), color, thickness)  #-- top-left
-    cv2.line(img, (x1, y1), (x1 + line_length_x, y1), color, thickness)
-
-    cv2.line(img, (x1, y2), (x1, y2 - line_length_y), color, thickness)  #-- bottom-left
-    cv2.line(img, (x1, y2), (x1 + line_length_x, y2), color, thickness)
-
-    cv2.line(img, (x2, y1), (x2 - line_length_x, y1), color, thickness)  #-- top-right
-    cv2.line(img, (x2, y1), (x2, y1 + line_length_y), color, thickness)
-
-    cv2.line(img, (x2, y2), (x2, y2 - line_length_y), color, thickness)  #-- bottom-right
-    cv2.line(img, (x2, y2), (x2 - line_length_x, y2), color, thickness)
-
-    return img
 
 results = pd.read_csv('./test.csv')
 
@@ -64,10 +47,8 @@ while ret:
     if ret:
         df_ = results[results['frame_number'] == frame_number]
         for row_indx in range(len(df_)):
-            # Draw car
+            # Draw car if necessary
             car_x1, car_y1, car_x2, car_y2 = ast.literal_eval(df_.iloc[row_indx]['car_bbox'].replace('[ ', '[').replace('   ', ' ').replace('  ', ' ').replace(' ', ','))
-            # draw_border(frame, (int(car_x1), int(car_y1)), (int(car_x2), int(car_y2)), (0, 255, 0), 25,
-            #             line_length_x=200, line_length_y=200)
 
             # Draw license plate
             x1, y1, x2, y2 = ast.literal_eval(df_.iloc[row_indx]['license_plate_bbox'].replace('[ ', '[').replace('   ', ' ').replace('  ', ' ').replace(' ', ','))
@@ -85,30 +66,11 @@ while ret:
             crop_start_x = car_center_x - W // 2
 
             try:
-                # frame[crop_start_y:crop_start_y + H, crop_start_x:crop_start_x + W, :] = license_crop
-
-                # Draw white background for text
-                # text_bg_start_y = crop_start_y - 100
-                # text_bg_end_y = crop_start_y
-                # text_bg_start_x = crop_start_x
-                # text_bg_end_x = crop_start_x + W
-
-                # frame[text_bg_start_y:text_bg_end_y, text_bg_start_x:text_bg_end_x, :] = (255, 255, 255)
-
                 # Put license plate text
                 license_text = license_plate[df_.iloc[row_indx]['car_id']]['license_plate_number']
                 (text_width, text_height), _ = cv2.getTextSize(license_text, cv2.FONT_HERSHEY_SIMPLEX, 2, 3)
-                
-                # text_x = car_center_x - text_width // 2
-                # text_y = text_bg_start_y + text_height // 2
-                print("==========================================================================================")
-                # print(text_x, text_y, car_center_x, text_bg_start_y, text_width, text_height)
-                print(license_text)
-                print("==========================================================================================")
                 cv2.putText(frame, license_text, (int(x1), int(y1)), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 255), 2)
                 
-                # cv2.putText(img, "{}".format(int(bbox[4])), (int(bbox[0]), int(bbox[1])), cv2.FONT_HERSHEY_SIMPLEX, 0.8, color_list[bbox[4]%79].tolist(), 2)
-
             except Exception as e:
                 print(f"Error cropping and placing license plate: {e}")
 
